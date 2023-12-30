@@ -39,8 +39,8 @@
 
 #include <QtCore/qscopedpointer.h>
 #include <QtCore/qstringlist.h>
-#include <QtAndroidExtras/QtAndroidExtras>
-#include <QtAndroidExtras/QAndroidJniObject>
+#include <QJniObject>
+#include <QJniEnvironment>
 
 #include <android/log.h>
 
@@ -57,7 +57,7 @@ QList<QSerialPortInfo> availablePortsByFiltersOfDevices(bool &ok)
     QList<QSerialPortInfo> serialPortInfoList;
 
     //__android_log_print(ANDROID_LOG_INFO, V_TAG, "Collecting device list");
-    QAndroidJniObject resultL = QAndroidJniObject::callStaticObjectMethod(
+    QJniObject resultL = QJniObject::callStaticObjectMethod(
         V_jniClassName,
         "availableDevicesInfo",
         "()[Ljava/lang/String;");
@@ -74,7 +74,7 @@ QList<QSerialPortInfo> availablePortsByFiltersOfDevices(bool &ok)
         gErrorCount = 0;
     }
 
-    QAndroidJniEnvironment envL;
+    QJniEnvironment envL;
     jobjectArray objArrayL = resultL.object<jobjectArray>();
     int countL = envL->GetArrayLength(objArrayL);
 
@@ -127,9 +127,9 @@ QList<qint32> QSerialPortInfo::standardBaudRates()
 
 bool QSerialPortInfo::isBusy() const
 {
-    QAndroidJniObject jstrL = QAndroidJniObject::fromString(d_ptr->portName);
+    QJniObject jstrL = QJniObject::fromString(d_ptr->portName);
     cleanJavaException();
-    jboolean resultL = QAndroidJniObject::callStaticMethod<jboolean>(
+    jboolean resultL = QJniObject::callStaticMethod<jboolean>(
         V_jniClassName,
         "isDeviceNameOpen",
         "(Ljava/lang/String;)Z",
@@ -140,9 +140,9 @@ bool QSerialPortInfo::isBusy() const
 
 bool QSerialPortInfo::isValid() const
 {
-    QAndroidJniObject jstrL = QAndroidJniObject::fromString(d_ptr->portName);
+    QJniObject jstrL = QJniObject::fromString(d_ptr->portName);
     cleanJavaException();
-    jboolean resultL = QAndroidJniObject::callStaticMethod<jboolean>(
+    jboolean resultL = QJniObject::callStaticMethod<jboolean>(
         V_jniClassName,
         "isDeviceNameValid",
         "(Ljava/lang/String;)Z",

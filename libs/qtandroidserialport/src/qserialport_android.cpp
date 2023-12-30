@@ -43,8 +43,9 @@
 #include <QtCore/qelapsedtimer.h>
 #include <QtCore/qsocketnotifier.h>
 #include <QtCore/qmap.h>
-#include <QtAndroidExtras/QtAndroidExtras>
-#include <QtAndroidExtras/QAndroidJniObject>
+#include <QJniObject>
+#include <QJniEnvironment>
+#include <QCoreApplication>
 
 #include "qserialport_android_p.h"
 
@@ -116,7 +117,7 @@ static void jniLogWarning(JNIEnv *envA, jobject thizA, jstring messageA)
 
 void cleanJavaException()
 {
-    QAndroidJniEnvironment env;
+    QJniEnvironment env;
     if (env->ExceptionCheck()) {
         env->ExceptionDescribe();
         env->ExceptionClear();
@@ -150,7 +151,7 @@ void QSerialPortPrivate::setNativeMethods(void)
         {"qgcLogWarning",               "(Ljava/lang/String;)V",    reinterpret_cast<void *>(jniLogWarning)}
     };
 
-    QAndroidJniEnvironment jniEnv;
+    QJniEnvironment jniEnv;
     if (jniEnv->ExceptionCheck()) {
         jniEnv->ExceptionDescribe();
         jniEnv->ExceptionClear();
@@ -181,13 +182,13 @@ bool QSerialPortPrivate::open(QIODevice::OpenMode mode)
     rwMode = mode;
     qCDebug(AndroidSerialPortLog) << "Opening" << systemLocation.toLatin1().data();
 
-    QAndroidJniObject jnameL = QAndroidJniObject::fromString(systemLocation);
+    QJniObject jnameL = QJniObject::fromString(systemLocation);
     cleanJavaException();
-    deviceId = QAndroidJniObject::callStaticMethod<jint>(
+    deviceId = QJniObject::callStaticMethod<jint>(
         kJniClassName,
         "open",
         "(Landroid/content/Context;Ljava/lang/String;J)I",
-        QtAndroid::androidActivity().object(),
+        QNativeInterface::QAndroidApplication::context(),
         jnameL.object<jstring>(),
         reinterpret_cast<jlong>(this));
     cleanJavaException();
@@ -214,7 +215,7 @@ void QSerialPortPrivate::close()
 
     qCDebug(AndroidSerialPortLog) << "Closing" << systemLocation.toLatin1().data();
     cleanJavaException();
-    jboolean resultL = QAndroidJniObject::callStaticMethod<jboolean>(
+    jboolean resultL = QJniObject::callStaticMethod<jboolean>(
         kJniClassName,
         "close",
         "(I)Z",
@@ -239,7 +240,7 @@ bool QSerialPortPrivate::setParameters(int baudRateA, int dataBitsA, int stopBit
     }
 
     cleanJavaException();
-    jboolean resultL = QAndroidJniObject::callStaticMethod<jboolean>(
+    jboolean resultL = QJniObject::callStaticMethod<jboolean>(
         kJniClassName,
         "setParameters",
         "(IIIII)Z",
@@ -269,7 +270,7 @@ void QSerialPortPrivate::stopReadThread()
     if (isReadStopped)
         return;
     cleanJavaException();
-    QAndroidJniObject::callStaticMethod<void>(
+    QJniObject::callStaticMethod<void>(
         kJniClassName,
         "stopIoManager",
         "(I)V",
@@ -285,7 +286,7 @@ void QSerialPortPrivate::startReadThread()
     if (!isReadStopped)
         return;
     cleanJavaException();
-    QAndroidJniObject::callStaticMethod<void>(
+    QJniObject::callStaticMethod<void>(
         kJniClassName,
         "startIoManager",
         "(I)V",
@@ -307,7 +308,7 @@ bool QSerialPortPrivate::setDataTerminalReady(bool set)
         return false;
     }
     cleanJavaException();
-    bool res = QAndroidJniObject::callStaticMethod<jboolean>(
+    bool res = QJniObject::callStaticMethod<jboolean>(
         kJniClassName,
         "setDataTerminalReady",
         "(IZ)Z",
@@ -325,7 +326,7 @@ bool QSerialPortPrivate::setRequestToSend(bool set)
         return false;
     }
     cleanJavaException();
-    bool res = QAndroidJniObject::callStaticMethod<jboolean>(
+    bool res = QJniObject::callStaticMethod<jboolean>(
         kJniClassName,
         "setRequestToSend",
         "(IZ)Z",
@@ -363,7 +364,7 @@ bool QSerialPortPrivate::clear(QSerialPort::Directions directions)
     }
 
     cleanJavaException();
-    bool res = QAndroidJniObject::callStaticMethod<jboolean>(
+    bool res = QJniObject::callStaticMethod<jboolean>(
         kJniClassName,
         "purgeBuffers",
         "(IZZ)Z",
@@ -615,12 +616,12 @@ qint64 QSerialPortPrivate::writeToPort(const char *data, qint64 maxSize)
         return 0;
     }
 
-    QAndroidJniEnvironment jniEnv;
+    QJniEnvironment jniEnv;
     jbyteArray jarrayL = jniEnv->NewByteArray(static_cast<jsize>(maxSize));
     jniEnv->SetByteArrayRegion(jarrayL, 0, static_cast<jsize>(maxSize), (jbyte*)data);
     if (jniEnv->ExceptionCheck())
         jniEnv->ExceptionClear();
-    int resultL = QAndroidJniObject::callStaticMethod<jint>(
+    int resultL = QJniObject::callStaticMethod<jint>(
         kJniClassName,
         "write",
         "(I[BI)I",

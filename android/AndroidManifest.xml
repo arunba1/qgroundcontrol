@@ -63,8 +63,6 @@
         </provider>
     </application>
 
-    <uses-sdk android:targetSdkVersion="33"/>
-
     <!-- Needed to keep working while 'asleep' -->
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
