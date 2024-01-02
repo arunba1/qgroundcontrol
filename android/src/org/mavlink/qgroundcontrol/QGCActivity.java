@@ -182,6 +182,7 @@ public class QGCActivity extends QtActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.i(TAG, "onCreate QGCActivity");
         super.onCreate(savedInstanceState);
         nativeInit();
         PowerManager pm = (PowerManager)_instance.getSystemService(Context.POWER_SERVICE);
@@ -194,6 +195,7 @@ public class QGCActivity extends QtActivity
         _instance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         _usbManager = (UsbManager)_instance.getSystemService(Context.USB_SERVICE);
+//        qgcLogDebug("_usbManager" + _usbManager);
 
         // Register for USB Detach and USB Permission intent
         IntentFilter filter = new IntentFilter();
@@ -295,6 +297,7 @@ public class QGCActivity extends QtActivity
     /// @return Device info format DeviceName:Company:ProductId:VendorId
     public static String[] availableDevicesInfo()
     {
+        qgcLogDebug("availableDevicesInfo CALLED ");
         updateCurrentDrivers();
 
         if (_drivers.size() <= 0) {

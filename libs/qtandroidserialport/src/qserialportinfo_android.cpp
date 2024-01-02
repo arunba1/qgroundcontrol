@@ -56,6 +56,8 @@ QList<QSerialPortInfo> availablePortsByFiltersOfDevices(bool &ok)
 {
     QList<QSerialPortInfo> serialPortInfoList;
 
+    __android_log_print(ANDROID_LOG_INFO, V_TAG, "isClassAvailable %d", QJniObject::isClassAvailable(V_jniClassName));
+
     //__android_log_print(ANDROID_LOG_INFO, V_TAG, "Collecting device list");
     QJniObject resultL = QJniObject::callStaticObjectMethod(
         V_jniClassName,
@@ -65,7 +67,7 @@ QList<QSerialPortInfo> availablePortsByFiltersOfDevices(bool &ok)
     if (!resultL.isValid()) {
         //-- If 5 consecutive errors, ignore it.
         if(gErrorCount < 5) {
-            gErrorCount++;
+            //gErrorCount++;
             __android_log_print(ANDROID_LOG_ERROR, V_TAG, "Error from availableDevicesInfo");
         }
         ok = false;
