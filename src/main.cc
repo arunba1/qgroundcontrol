@@ -135,7 +135,7 @@ gst_android_init(JNIEnv* env, jobject context)
 }
 
 //-----------------------------------------------------------------------------
-static const char kJniClassName[] {"org/mavlink/qgroundcontrol/QGCActivity"};
+static const char kJniQGCActivityClassName[] {"org/mavlink/qgroundcontrol/QGCActivity"};
 
 void setNativeMethods(void)
 {
@@ -149,9 +149,9 @@ void setNativeMethods(void)
         jniEnv->ExceptionClear();
     }
 
-    jclass objectClass = jniEnv->FindClass(kJniClassName);
+    jclass objectClass = jniEnv->FindClass(kJniQGCActivityClassName);
     if(!objectClass) {
-        qWarning() << "Couldn't find class:" << kJniClassName;
+        qWarning() << "Couldn't find class:" << kJniQGCActivityClassName;
         return;
     }
 

@@ -55,14 +55,20 @@ QT_BEGIN_NAMESPACE
 
 #define BAD_PORT 0
 
-static const char kJniClassName[] {"org/mavlink/qgroundcontrol/QGCActivity"};
+static const char kJniQGCActivityClassName[] {"org/mavlink/qgroundcontrol/QGCActivity"};
 
 static void jniDeviceHasDisconnected(JNIEnv *envA, jobject thizA, jlong userDataA)
 {
     Q_UNUSED(envA);
     Q_UNUSED(thizA);
-    if (userDataA != 0)
-        (reinterpret_cast<QSerialPortPrivate*>(userDataA))->q_ptr->close();
+
+    qCDebug(AndroidSerialPortLog) << "Device disconnected";
+
+    if (userDataA != 0) {
+        auto serialPort = reinterpret_cast<QSerialPortPrivate*>(userDataA);
+        qCDebug(AndroidSerialPortLog) << "Device disconnected" << serialPort->systemLocation.toLatin1().data();
+        serialPort->q_ptr->close();
+    }
 }
 
 static void jniDeviceNewData(JNIEnv *envA, jobject thizA, jlong userDataA, jbyteArray dataA)
@@ -157,9 +163,9 @@ void QSerialPortPrivate::setNativeMethods(void)
         jniEnv->ExceptionClear();
     }
 
-    jclass objectClass = jniEnv->FindClass(kJniClassName);
+    jclass objectClass = jniEnv->FindClass(kJniQGCActivityClassName);
     if(!objectClass) {
-        qWarning() << "Couldn't find class:" << kJniClassName;
+        qWarning() << "Couldn't find class:" << kJniQGCActivityClassName;
         return;
     }
 
@@ -185,7 +191,7 @@ bool QSerialPortPrivate::open(QIODevice::OpenMode mode)
     QJniObject jnameL = QJniObject::fromString(systemLocation);
     cleanJavaException();
     deviceId = QJniObject::callStaticMethod<jint>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "open",
         "(Landroid/content/Context;Ljava/lang/String;J)I",
         QNativeInterface::QAndroidApplication::context(),
@@ -216,7 +222,7 @@ void QSerialPortPrivate::close()
     qCDebug(AndroidSerialPortLog) << "Closing" << systemLocation.toLatin1().data();
     cleanJavaException();
     jboolean resultL = QJniObject::callStaticMethod<jboolean>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "close",
         "(I)Z",
         deviceId);
@@ -241,7 +247,7 @@ bool QSerialPortPrivate::setParameters(int baudRateA, int dataBitsA, int stopBit
 
     cleanJavaException();
     jboolean resultL = QJniObject::callStaticMethod<jboolean>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "setParameters",
         "(IIIII)Z",
         deviceId,
@@ -271,7 +277,7 @@ void QSerialPortPrivate::stopReadThread()
         return;
     cleanJavaException();
     QJniObject::callStaticMethod<void>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "stopIoManager",
         "(I)V",
         deviceId);
@@ -287,7 +293,7 @@ void QSerialPortPrivate::startReadThread()
         return;
     cleanJavaException();
     QJniObject::callStaticMethod<void>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "startIoManager",
         "(I)V",
         deviceId);
@@ -309,7 +315,7 @@ bool QSerialPortPrivate::setDataTerminalReady(bool set)
     }
     cleanJavaException();
     bool res = QJniObject::callStaticMethod<jboolean>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "setDataTerminalReady",
         "(IZ)Z",
         deviceId,
@@ -327,7 +333,7 @@ bool QSerialPortPrivate::setRequestToSend(bool set)
     }
     cleanJavaException();
     bool res = QJniObject::callStaticMethod<jboolean>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "setRequestToSend",
         "(IZ)Z",
         deviceId,
@@ -365,7 +371,7 @@ bool QSerialPortPrivate::clear(QSerialPort::Directions directions)
 
     cleanJavaException();
     bool res = QJniObject::callStaticMethod<jboolean>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "purgeBuffers",
         "(IZZ)Z",
         deviceId,
@@ -622,7 +628,7 @@ qint64 QSerialPortPrivate::writeToPort(const char *data, qint64 maxSize)
     if (jniEnv->ExceptionCheck())
         jniEnv->ExceptionClear();
     int resultL = QJniObject::callStaticMethod<jint>(
-        kJniClassName,
+        kJniQGCActivityClassName,
         "write",
         "(I[BI)I",
         deviceId,
