@@ -26,4 +26,5 @@ PlanCreator::PlanCreator(PlanMasterController* planMasterController, QString nam
 void PlanCreator::createPlan(const QGeoCoordinate& /* mapCenterCoord */)
 {
     _planMasterController->renamePlan(_planMasterController->generateNewPlanName(_name));
+    _planMasterController->setPlanType(_name);
 }

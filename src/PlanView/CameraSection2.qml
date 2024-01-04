@@ -94,7 +94,7 @@ ColumnLayout {
             ColumnLayout {
                 spacing: 0
                 enabled: gimbalCheckBox.checked
-
+    
                 QGCLabel { text: qsTr("Yaw") }
                 FactTextField {
                     fact:           cameraSection.gimbalYaw

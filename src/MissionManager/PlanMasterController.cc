@@ -660,3 +660,11 @@ QString PlanMasterController::generateNewPlanName (const QString& prefix) const
 
     return baseName.arg(i);
 }
+
+void PlanMasterController::setPlanType(const QString& planType)
+{
+    if (planType != _planType) {
+        _planType = planType;
+        emit planTypeChanged(_planType);
+    }
+}

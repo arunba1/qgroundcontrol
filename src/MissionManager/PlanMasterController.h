@@ -40,6 +40,7 @@ public:
     ~PlanMasterController();
 
     Q_PROPERTY(QString                  planName                READ planName                               NOTIFY planNameChanged)
+    Q_PROPERTY(QString                  planType                READ planType                               NOTIFY planTypeChanged)
     Q_PROPERTY(bool                     flyView                 MEMBER _flyView)
     Q_PROPERTY(Vehicle*                 controllerVehicle       READ controllerVehicle                      CONSTANT)                       ///< Offline controller vehicle
     Q_PROPERTY(Vehicle*                 managerVehicle          READ managerVehicle                         NOTIFY managerVehicleChanged)   ///< Either active vehicle or _controllerVehicle if no active vehicle
@@ -103,9 +104,11 @@ public:
     QStringList saveNameFilters     (void) const;
     bool        isEmpty             (void) const;
     QString     planName            (void) const { return _planName; }
+    QString     planType            (void) const { return _planType; }
     QString     generateNewPlanName (const QString& prefix) const;
 
     void        setFlyView(bool flyView) { _flyView = flyView; }
+    void        setPlanType(const QString& planType);
 
     QJsonDocument saveToJson    ();
 
@@ -123,7 +126,8 @@ signals:
     void syncInProgressChanged              (void);
     void dirtyChanged                       (bool dirty);
     void offlineChanged                     (bool offlineEditing);
-    void planNameChanged                    (QString planeName);
+    void planNameChanged                    (QString planName);
+    void planTypeChanged                    (QString planType);
     void planDeleted                        (void);
     void planCreatorsChanged                (QmlObjectListModel* planCreators);
     void managerVehicleChanged              (Vehicle* managerVehicle);
@@ -161,5 +165,6 @@ private:
     bool                    _deleteWhenSendCompleted =  false;
     QmlObjectListModel*     _planCreators =             nullptr;
     QString                 _planName;
+    QString                 _planType;
     AppSettings*            _appSettings =              nullptr;
 };

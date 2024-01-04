@@ -55,6 +55,21 @@ Rectangle {
         anchors.left:       parent.left
         spacing:            ScreenTools.defaultFontPixelWidth
 
+        ColumnLayout {
+            spacing: 0
+
+            QGCLabel {
+                Layout.alignment:   Qt.AlignLeft
+                text:               planMasterController.planName
+                font.bold:          true
+            }
+            QGCLabel {
+                Layout.alignment:   Qt.AlignLeft
+                text:               planMasterController.planType
+                font.pointSize:     ScreenTools.smallFontPointSize
+            }
+        }
+
         QGCButton {
             text: qsTr("Save")
 
