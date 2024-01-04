@@ -27,7 +27,7 @@ public:
     Q_PROPERTY(QString  name            MEMBER _name            CONSTANT)
     Q_PROPERTY(QString  imageResource   MEMBER _imageResource   CONSTANT)
 
-    Q_INVOKABLE virtual void createPlan(const QGeoCoordinate& mapCenterCoord) = 0;
+    Q_INVOKABLE virtual void createPlan(const QGeoCoordinate& mapCenterCoord);
 
 protected:
     PlanMasterController*   _planMasterController;

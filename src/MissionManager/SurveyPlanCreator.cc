@@ -20,7 +20,8 @@ SurveyPlanCreator::SurveyPlanCreator(PlanMasterController* planMasterController,
 
 void SurveyPlanCreator::createPlan(const QGeoCoordinate& mapCenterCoord)
 {
-    _planMasterController->removeAll();
+    PlanCreator::createPlan(mapCenterCoord);
+
     VisualMissionItem* takeoffItem = _missionController->insertTakeoffItem(mapCenterCoord, -1);
     _missionController->insertComplexMissionItem(SurveyComplexItem::name, mapCenterCoord, -1);
     _missionController->insertLandItem(mapCenterCoord, -1);

@@ -7,18 +7,18 @@
  *
  ****************************************************************************/
 
-#include "BlankPlanCreator.h"
+#include "WaypointsPlanCreator.h"
 #include "PlanMasterController.h"
 #include "MissionSettingsItem.h"
 #include "FixedWingLandingComplexItem.h"
 
-BlankPlanCreator::BlankPlanCreator(PlanMasterController* planMasterController, QObject* parent)
-    : PlanCreator(planMasterController, tr("Blank"), QStringLiteral("/qmlimages/PlanCreator/BlankPlanCreator.png"), parent)
+WaypointsPlanCreator::WaypointsPlanCreator(PlanMasterController* planMasterController, QObject* parent)
+    : PlanCreator(planMasterController, tr("Waypoints"), QStringLiteral("/qmlimages/PlanCreator/WaypointsPlanCreator.png"), parent)
 {
 
 }
 
-void BlankPlanCreator::createPlan(const QGeoCoordinate& /*mapCenterCoord*/)
+void WaypointsPlanCreator::createPlan(const QGeoCoordinate& mapCenterCoord)
 {
-    _planMasterController->removeAll();
+    PlanCreator::createPlan(mapCenterCoord);
 }

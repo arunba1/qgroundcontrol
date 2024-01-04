@@ -3,6 +3,7 @@ add_custom_target(PlanViewQml
 		CameraCalcCamera.qml
 		CameraCalcGrid.qml
 		CameraSection.qml
+		CameraSection2.qml
 		CorridorScanEditor.qml
 		CorridorScanMapVisual.qml
 		FWLandingPatternEditor.qml
@@ -15,7 +16,6 @@ add_custom_target(PlanViewQml
 		MissionSettingsEditor.qml
 		PlanEditToolbar.qml
 		PlanToolBarIndicators.qml
-		PlanToolBar.qml
 		PlanView.qml
 		RallyPointEditorHeader.qml
 		RallyPointItemEditor.qml

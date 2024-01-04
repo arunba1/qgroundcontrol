@@ -30,7 +30,7 @@ Rectangle {
     property bool   _multipleVehicleTypes:          !QGroundControl.singleVehicleSupport
     property real   _fieldWidth:                    ScreenTools.defaultFontPixelWidth * 16
     property bool   _mobile:                        ScreenTools.isMobile
-    property var    _savePath:                      QGroundControl.settingsManager.appSettings.missionSavePath
+    property var    _savePath:                      QGroundControl.settingsManager.appSettings.planSavePath
     property var    _fileExtension:                 QGroundControl.settingsManager.appSettings.missionFileExtension
     property var    _appSettings:                   QGroundControl.settingsManager.appSettings
     property bool   _waypointsOnlyMode:             QGroundControl.corePlugin.options.missionWaypointsOnly

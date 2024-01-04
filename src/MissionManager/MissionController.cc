@@ -146,22 +146,13 @@ void MissionController::_init(void)
 }
 
 // Called when new mission items have completed downloading from Vehicle
-void MissionController::_newMissionItemsAvailableFromVehicle(bool removeAllRequested)
+void MissionController::_newMissionItemsAvailableFromVehicle(bool /* removeAllRequested */)
 {
     qCDebug(MissionControllerLog) << "_newMissionItemsAvailableFromVehicle flyView:count" << _flyView << _missionManager->missionItems().count();
 
     // Fly view always reloads on _loadComplete
-    // Plan view only reloads if:
-    //  - Load was specifically requested
-    //  - There is no current Plan
-    if (_flyView || removeAllRequested || _itemsRequested || isEmpty()) {
-        // Fly Mode (accept if):
-        //      - Always accepts new items from the vehicle so Fly view is kept up to date
-        // Edit Mode (accept if):
-        //      - Remove all was requested from Fly view (clear mission on flight end)
-        //      - A load from vehicle was manually requested
-        //      - The initial automatic load from a vehicle completed and the current editor is empty
-
+    // Plan view never loads from vehicle
+    if (_flyView) {
         _deinitAllVisualItems();
         _visualItems->deleteLater();
         _visualItems  = nullptr;

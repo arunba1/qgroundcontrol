@@ -9,6 +9,9 @@
 
 #include "PlanCreator.h"
 #include "PlanMasterController.h"
+#include "QGCApplication.h"
+#include "SettingsManager.h"
+#include "AppSettings.h"
 
 PlanCreator::PlanCreator(PlanMasterController* planMasterController, QString name, QString imageResource, QObject* parent)
     : QObject               (parent)
@@ -18,4 +21,9 @@ PlanCreator::PlanCreator(PlanMasterController* planMasterController, QString nam
     , _imageResource        (imageResource)
 {
 
+}
+
+void PlanCreator::createPlan(const QGeoCoordinate& /* mapCenterCoord */)
+{
+    _planMasterController->renamePlan(_planMasterController->generateNewPlanName(_name));
 }

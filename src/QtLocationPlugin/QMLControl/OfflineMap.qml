@@ -212,7 +212,7 @@ Item {
 
     QGCFileDialog {
         id:             fileDialog
-        folder:         QGroundControl.settingsManager.appSettings.missionSavePath
+        folder:         QGroundControl.settingsManager.appSettings.planSavePath
         nameFilters:    ["Tile Sets (*.qgctiledb)"]
 
         onAcceptedForSave: (file) => {
